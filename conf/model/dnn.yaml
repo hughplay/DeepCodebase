@@ -1,0 +1,6 @@
+_target_: src.model.dnn.DNN
+cfg:
+  in_features: 1024
+  classes: 10
+  activation: relu
+  batch_norm: false

@@ -1,0 +1,9 @@
+# @package _global_
+name: mnist_dnn
+notes: "This is a simple MNIST DNN model."
+
+defaults:
+  - override /model: dnn
+
+pl_trainer:
+  devices: 1

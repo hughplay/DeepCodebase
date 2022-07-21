@@ -1,0 +1,6 @@
+_target_: src.dataset.mnist.MNISTDataModule
+data_dir: /data/mnist
+train_val_test_split: [55_000, 5_000, 10_000]
+batch_size: 64
+num_workers: 4
+pin_memory: False

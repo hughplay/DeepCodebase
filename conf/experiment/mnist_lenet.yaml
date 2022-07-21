@@ -1,0 +1,9 @@
+# @package _global_
+name: mnist_lenet
+notes: "This is a simple MNIST LeNet model."
+
+defaults:
+  - override /model: lenet
+
+pl_trainer:
+  devices: 1
