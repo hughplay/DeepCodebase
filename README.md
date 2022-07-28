@@ -4,7 +4,8 @@ Official repository for ["DeepCodebase for Deep Learning"](https://github.com/hu
 
 ![A fancy image here](docs/_static/imgs/logo.svg)
 
-**Figure:** *DeepCodebase for Deep Learning. (Provide a fancy image here to impress your audience.)*
+**Figure:** *DeepCodebase for Deep Learning.
+(Read [DEVELOPMENT.md](./DEVELOPMENT.md) to learn more about this template.)*
 
 > **DeepCodebase for Deep Learning** <br>
 > Xin Hong <br>
@@ -17,6 +18,7 @@ Official repository for ["DeepCodebase for Deep Learning"](https://github.com/hu
 [![](https://img.shields.io/badge/PyTorch-ee4c2c?style=flat-square&logo=pytorch&logoColor=white)](https://pytorch.org/get-started/locally/)
 [![](https://img.shields.io/badge/-Lightning-792ee5?style=flat-square&logo=pytorchlightning&logoColor=white)](https://pytorchlightning.ai/)
 [![](docs/_static/imgs/hydra.svg)](https://hydra.cc)
+[![](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square&labelColor=gray)](#license)
 
 ## News
 
@@ -28,10 +30,10 @@ DeepCodebase is a codebase/template for deep learning researchers, so that do
 experiments and releasing projects becomes easier.
 **Do right things with suitable tools!**
 
-This README.md is meant to be the template README of the releasing project.
-**[Read the Development Guide](./DEVELOPMENT.md) to realize and start to use DeepCodebase**
+***This README.md is meant to be the template README of the releasing project.
+[Read the Development Guide](./DEVELOPMENT.md) to realize and start to use DeepCodebase.***
 
-If you find this code useful, please star this repo and cite us:
+If you find this code useful, please consider to star this repo and cite us:
 
 ```
 @inproceedings{deepcodebase,
@@ -44,25 +46,34 @@ If you find this code useful, please star this repo and cite us:
 
 ## Environment Setup
 
-This project recommends using [docker](https://www.docker.com/) to run experiments.
+This project recommends to run experiments with [docker](https://www.docker.com/).
+However, we also provide a way to install the experiment environment with
+`conda` directly on the host machine.
+Check [our introduction about the environment](./DEVELOPMENT.md#docker---prepare-the-environment)
+for details.
 
 ### Quick Start
 
-The following steps are to build a docker image for this project and run it.
+The following steps are to build a docker image for this project and run.
 
-**Step 1.** Install docker-compose in your workspace.
+**Step 1.** Install docker-compose in your host machine.
 ```sh
 # (set PyPI mirror is optional)
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 pip install docker-compose
 ```
 
-**Step 2.** Build a docker image and start a docker container.
+**Step 2.** Build a docker image according to `docker/Dockerfile` and start
+a docker container.
 ```sh
 python docker.py prepare --build
 ```
+**When you first run `docker.py`, it will prompt you to set variables such as project
+name, data root, etc. These variables are related to the docker container and will
+be stored in `.env` file under the root. Read the [DEVELOPMENT.md](./DEVELOPMENT.md)
+for more information.*
 
-**Step 3.** Enter the docker container at any time, start experiments now.
+**Step 3.** Enter the docker container at any time, the environment is ready for experiments.
 ```sh
 python docker.py [enter]
 ```
@@ -83,16 +94,20 @@ python train.py experiment=mnist_lenet devices="[0]"
 # training a mnist_lenet on GPU 1
 python train.py experiment=mnist_dnn devices="[1]"
 
-# training a mnist_lenet on two gpus
+# training a mnist_lenet on two gpus, and change the experiment name
 python train.py experiment=mnist_lenet devices="[2,3]" name="mnist lenet 2gpus"
 ```
+
+Read [sections about the configuration](./DEVELOPMENT.md#hydra---configuration)
+to learn how to configure your experiments structurally and simply override them
+from command line.
 
 ## Testing
 
 Commonly used testing commands:
 
 ```sh
-# * test the model, <logdir> has been printed twice (start & end) when training
+# test the model, <logdir> has been printed twice (start & end) on training log
 python test.py <logdir>
 # test the model, with multiple config overrides, e.g.: to test multiple datasets
 python test.py <logdir> --update_func test_original test_example
@@ -102,6 +117,10 @@ python test.py --update_func test_original test_example --prefix original exampl
 python scripts/generate_latex_table.py
 ```
 
+Read [sections about wandb](./DEVELOPMENT.md#weights--biases-wandb)
+to learn how exporting the LaTex table from experimental records works.
+
+
 ## Acknowledgement
 
 Many best practices are learned from [Lightning-Hydra-Template](https://github.com/ashleve/lightning-hydra-template), thanks to the maintainers of this project.
@@ -109,3 +128,7 @@ Many best practices are learned from [Lightning-Hydra-Template](https://github.c
 ## License
 
 [MIT License](./LICENSE)
+
+<br>
+
+*The is a [DeepCodebase](https://github.com/hughplay/DeepCodebase) template based project.*

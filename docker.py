@@ -172,7 +172,7 @@ def _set_env(env_path=DEFAULT_ENV_PATH, verbose=False):
                 log_root.mkdir(parents=True)
         e["LOG_ROOT"] = str(log_root)
 
-    e["COMPOSE_PROJECT_NAME"] = f"{e['PROJECT']}_{e['USER_NAME']}"
+    e["COMPOSE_PROJECT_NAME"] = f"{e['PROJECT']}_{e['USER_NAME']}".lower()
     e.save()
 
     if verbose:

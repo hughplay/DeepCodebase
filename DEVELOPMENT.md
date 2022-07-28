@@ -1,11 +1,9 @@
-# Development Guides
-
-## Introduction
+# Introduction
 
 **DeepCodebase** is a codebase/template for deep learning researchers, so that
 **do experiments and releasing codes become easier**.
 
-![DeepCodebase](docs/_static/imgs/logo.svg)
+[![DeepCodebase](docs/_static/imgs/logo.svg)](https://github.com/hughplay/DeepCodebase)
 
 
 For deep learning researchers, a codebase is an experiment platform.
@@ -27,10 +25,11 @@ For example,
 >- ......
 
 And this codebase is a product of solving these problems. **If this codebase
-inspires you or helps you to solve some problems, please give my repo a star. :)**
+inspires you or helps you to solve some problems, please star my repo. :)**
 
+<br>
 
-## A Walkthrough of DeepCodebase
+# A Walkthrough of DeepCodebase
 
 
 The whole project is actually a collection of **tools** and **best practices**.
@@ -39,9 +38,8 @@ In other words, **do right things with suitable tools**.
 The major **tools** used in the project include:
 - [**Docker:**](https://www.docker.com/) the tool to manage the experimental environments.
 - [**PyTorch:**](https://pytorch.org/) most common used machine / deep learning framework.
-- [**PyTorch Lightning:**](https://pytorchlightning.ai/) the tool to access many advanced training technologies,
+- [**PyTorch Lightning:**](https://pytorchlightning.ai/) the tool to access many advanced training technologies, just like glue or a connector.
 - [**Hydra:**](https://www.hydra.cc/) the tool to manage the experimental settings.
-just like glue or a connector.
 - [**Weights & Biases (wandb):**](https://www.wandb.ai/) the tool to record the results of experiments.
 
 A figure to show the relationship between these tools:
@@ -61,22 +59,31 @@ project structure and daily coding habits. Major actions include:
 In the remaining sections, we will introduce the codebase in detail. The content
 is structured as follows:
 
-- [Commonly Used Commands](#commonly-used-commands)
-- [Project Structure](#project-structure)
-- [Docker - Prepare the Environment](#docker---prepare-the-environment)
-- [PyTorch & PyTorch Lightning](#pytorch--pytorch-lightning)
-- [Hydra - Configuration](#hydra---configuration)
-- [Weights & Biases (wandb)](#weights--biases-wandb)
-- [Other Best Practices*](#other-best-practices)
-- [API Document*](#api-document)
-- [Choose A License*](#choose-a-license)
+- [Introduction](#introduction)
+- [A Walkthrough of DeepCodebase](#a-walkthrough-of-deepcodebase)
+  - [Commonly Used Commands](#commonly-used-commands)
+  - [Project Structure](#project-structure)
+  - [Docker - Prepare the Environment](#docker---prepare-the-environment)
+  - [PyTorch & PyTorch Lightning](#pytorch--pytorch-lightning)
+  - [Hydra - Configuration](#hydra---configuration)
+  - [Weights & Biases (wandb)](#weights--biases-wandb)
+  - [Best Practices*](#best-practices)
+    - [**Changelog**](#changelog)
+    - [**Pre-Commit**](#pre-commit)
+    - [**Code Style**](#code-style)
+    - [**PyTest**](#pytest)
+    - [**Debugging**](#debugging)
+  - [API Document*](#api-document)
+  - [Choose A License*](#choose-a-license)
 
 Sections marked with * are bonus sections, read as your interests.
 The first two sections are used for quick start/references
 and the remaining sections explain them in detail.
 
+<br>
 
-### Commonly Used Commands
+
+## Commonly Used Commands
 
 Commonly used commands in the codebase are listed below.
 
@@ -138,7 +145,9 @@ pre-commit install
 pre-commit run -a
 ```
 
-### Project Structure
+<br>
+
+## Project Structure
 
 The directory structure of this project is shown below.
 
@@ -202,8 +211,9 @@ The directory structure of this project is shown below.
 └── README.md                   <- Description of the project. A ready to use template for releasing your project.
 ```
 
+<br>
 
-### Docker - Prepare the Environment
+## Docker - Prepare the Environment
 
 Don't be worried if you don't know much about Docker.
 Follow the steps below and the experimental environments will be ready for you.
@@ -228,7 +238,72 @@ python docker.py [enter]
 python train.py
 ```
 
-More advanced scenarios:
+More advanced scenarios & questions about the environment:
+
+**Q: When I first run `docker.py`, it prompts me to set many variables. What are they used for?**
+
+When you first run `docker.py`, it will prompt you to set variables such as project
+name, data root, etc. These variables are related to the docker container and will
+be stored in `.env` file under the root.
+
+The final `.env` file will look like this:
+
+``` ini
+UID=1002
+GID=1002
+USER_NAME=hugh
+PROJECT=mnist
+CODE_ROOT=.
+DATA_ROOT=data
+LOG_ROOT=log
+COMPOSE_PROJECT_NAME=hugh
+```
+
+These variables are used for building the docker image and run the container.
+Please check [`docker-compose.yml`](./docker-compose.yml) for more details.
+For examples, `CODE_ROOT`, `DATA_ROOT`, `LOG_ROOT` are mounted to the container:
+
+``` yaml
+volumes:
+  - ${CODE_ROOT}:/project
+  - ${DATA_ROOT}:/data
+  - ${LOG_ROOT}:/log
+```
+
+
+**Q: Why using docker?**
+
+**A:** The answer is always "it saves my time". The environment built by docker
+is stable and consistent across different machines. You do not need to spend much
+time to struggle fighting with different situations such as different cpu
+architectures, systems, privileges, etc.
+
+Another benefit is docker reduce the effort of system maintenance.
+You only need to ask your system admin once that you need to run docker.
+Both you and the system admin are happy.
+Then you are the empire (root user) within your docker container.
+Without docker, emmmm... That must be painful if you have no root permission.
+
+**Q: I still don't want to used docker?**
+
+**A:** Of course you can use this template without docker.
+You could create the environment with conda/miniconda:
+```sh
+# create a conda environment
+conda crate -n <project_name> python=3.8
+# install python packages
+pip install -r docker/requirements.txt
+```
+After setup the environment, you need to change the path in the conf files to
+the path on your host machines:
+- `conf/dataset/mnist.yaml`
+- `conf/logdir/default.yaml`
+- `conf/logdir/debug.yaml`
+In most cases, just remove the first `/` and everything should works fine.
+
+For users who live in Chinese mainland, the convenient miniconda installation command
+[can be found here](https://github.com/hughplay/memo/blob/6f27c11cac6e01f35bffb0def5eb9669b0ff8f65/scripts/prepare_dl.sh#L132).
+
 
 **Q: How to add extra python packages to the container?**
 
@@ -253,8 +328,9 @@ To reduce the building time, the first several parts of the
 **A:** You should contact the system administrator to install them. If you have
 the root privilege, [follow this script](https://github.com/hughplay/memo/blob/9448664177709aed5e3614fdcba9413366a832fe/scripts/prepare_dl.sh#L163) to install them.
 
+<br>
 
-### PyTorch & PyTorch Lightning
+## PyTorch & PyTorch Lightning
 
 PyTorch is the most popular deep learning framework in the research community of AI.
 PyTorch Lightning is a wrapper of PyTorch to make it easier to use.
@@ -315,7 +391,9 @@ def main(cfg: DictConfig) -> None:
         trainer.test(pipeline, datamodule, ckpt_path="best")
 ```
 
-### Hydra - Configuration
+<br>
+
+## Hydra - Configuration
 
 You must have noticed in the last section, that there is a decorator above the `main`
 function: `@hydra.main(config_path="conf", config_name="train")`. That is Hydra.
@@ -372,8 +450,9 @@ For example, `- override /model: dnn` will override the `model` as `dnn`.
 
 **Best practice: Be careful to change the default settings, just override them with experiments**.
 
+<br>
 
-### Weights & Biases (wandb)
+## Weights & Biases (wandb)
 
 Wandb is a great tool for experiment tracking. I never use TensorBoard again
 after my first try. It also provides API, so that transforming your experimental
@@ -411,15 +490,17 @@ LeNet & \textbf{0.983000} \\
 \end{table}
 ```
 
-### Other Best Practices*
+<br>
 
-**Changelog**
+## Best Practices*
+
+### Changelog
 
 It is a good habit to [record the changes](./CHANGELOG.md) in the codes for
 later checking and sharing.
 
 
-**Pre-Commit**
+### Pre-Commit
 
 This tool is learned from [lightning-hydra-template](https://github.com/ashleve/lightning-hydra-template),
 it is very useful for uniforming code styles when collaborating.
@@ -436,13 +517,13 @@ After `pre-commit` is installed, it will run automatically after you commit your
 If `pre-commit` changes your code, don't forget to git add & commit again.
 Running hooks are configured in [`.pre-commit-config.yaml`](./.pre-commit-config.yaml).
 
-**Code Style**
+### Code Style
 
 This codebase prefer `--max-line-length=80` for python language. You can modify
 this setting in [setup.cfg](./setup.cfg) as you like.
 
 
-**PyTest**
+### PyTest
 
 Write some test cases to make sure codes run as you expect.
 There are two example tests under `tests/`. Try to test with:
@@ -456,8 +537,40 @@ pytest tests/test_conf.py
 pytest -s
 ```
 
+### Debugging
 
-### API Document*
+[Python Debugger](https://docs.python.org/3/library/pdb.html) is a great tool for debugging.
+Recommend to [check this pdb cheat sheet](https://kapeli.com/cheat_sheets/Python_Debugger.docset/Contents/Resources/Documents/index).
+
+The basic workflow is:
+```sh
+# 1. add breakpoint (python>=3.7)
+breakpoint()
+# 1. add breakpoint (python<3.7)
+import pdb; pdb.set_trace()
+# 2. run `train.py` with the default debugging mode
+python train.py experiment=mnist_lenet debug=default
+```
+
+There are many other debug mode for different requirements, such as overfitting small batches.
+``` sh
+python train.py experiment=mnist_lenet debug=overfit
+```
+Check `conf/debug` for more debugging modes and
+[the debugging section of pytorch lightning](https://pytorch-lightning.readthedocs.io/en/stable/common/debugging.html).
+
+
+If you prefer `ipython` to `python`, we recommend you to use `ipdb`:
+```sh
+# install ipdb
+pip install ipdb
+# set breakpoint
+import ipdb; ipdb.set_trace()
+```
+
+<br>
+
+## API Document*
 
 This codebase supports automatically generating API documents from python modules
 with [sphinx](https://www.sphinx-doc.org/):
@@ -474,8 +587,9 @@ When documents are built, they can be viewed at [http://localhost:8080](http://l
 The style of the docstring is followed
 [numpy style docstring](https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard).
 
+<br>
 
-### Choose A License*
+## Choose A License*
 
 This codebase is under [MIT license](./LICENSE).
 Don't forget to modify the year and the name in the license when releasing your own projects.

@@ -36,7 +36,7 @@ pandas
 # =============================================
 # Nautral Language Processing
 # =============================================
-# transfomers
+# transformers
 # spacy           # for text preprocessing
 
 # =============================================

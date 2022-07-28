@@ -10,8 +10,31 @@
 
 ## TODO
 
-- [ ] spell check
-- [ ] add some logos to the teaser, including PyTorch, Lightning, ...
+- [ ] modify teaser image
+    - add the words
+    - ?add some logos to the teaser, including PyTorch, Lightning, ...
+
+## 2022-7-28 13:20:16
+
+Bug:
+- [x] fix bug `for "-t, --tag" flag: invalid reference format: repository name must be lowercase.`
+
+Updates:
+- [x] spell check
+- [x] proof review
+- [x] add "template from DeepCodebase" to the end
+- [x] add link to DeepCodebase image
+- [x] comment out "jupyter notebook cell output clearing" in `.pre-commit-config.yaml`,
+so that the cell outputs will be reserved.
+- [x] add base plotting fonts to the base docker image.
+    - [Which Font Looks Best in a Figure?](https://pubs.acs.org/doi/10.1021/acs.chemmater.6b00306)
+    - https://github.com/hughplay/memo/blob/6f27c11cac6e01f35bffb0def5eb9669b0ff8f65/code/snippet/drawing/notebook.py#L6
+
+Previously, I installed a package inside jupyter notebook and import it does not work,
+but now it works. May be I missed something.
+- [ ] ~~?move conda base from `/usr/local` to `/usr/local/conda`
+and modify `PYTHONUSERBASE` to this value.~~
+
 
 ## 2022-7-21 15:39:19
 
