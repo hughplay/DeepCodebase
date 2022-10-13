@@ -13,6 +13,25 @@
 - [ ] modify teaser image
     - add the words
     - ?add some logos to the teaser, including PyTorch, Lightning, ...
+- [ ] guides for offline users:
+    - [ ] guides for build docker in offline environments
+    - [ ] guides for using `.env` to login wandb
+    - [ ] guides for sync `wandb` logs after offline training
+- [ ] add a Chinese version README.md
+- [ ] Provide a use case: how to add a dataset and a model to run this project
+- [ ] Provide a `update.sh` to pull new functionalities from DeepCodebase.
+- [ ] update `time2str` in `timetool`
+- [ ] add introduction of PytorchLightning: https://towardsdatascience.com/pytorch-lightning-vs-deepspeed-vs-fsdp-vs-ffcv-vs-e0d6b2a95719
+- [ ] add model visualization
+- [ ] add demo with gradio
+
+
+## 2022-10-13 16:34:17
+
+- [x] update overview image
+- [x] Move DEVELOPMENT.md to README.md & Move README.md to COVER.md
+- [x] fix criterion, wrong return type in `forward`
+- [x] new feature: mount .zsh_history
 
 ## 2022-7-28 13:20:16
 

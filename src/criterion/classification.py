@@ -38,7 +38,7 @@ class ClassificationCriterion(nn.Module):
 
     def forward(
         self, outputs: Dict[str, torch.Tensor], stage="train"
-    ) -> torch.Tensor:
+    ) -> Dict[str, torch.Tensor]:
         # compute loss
         loss = self.loss(outputs["logits"], outputs["targets"])
         # compute predictions from logits
