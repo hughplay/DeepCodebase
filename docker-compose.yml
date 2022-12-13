@@ -35,4 +35,6 @@ services:
       - ${CODE_ROOT}:/project
       - ${DATA_ROOT}:/data
       - ${LOG_ROOT}:/log
-      - ./docker/misc/.zsh_history:/home/${USER_NAME}/.zsh_history
+      - type: bind
+        source: ${CACHE_ZSH_HISTORY}
+        target: /home/${USER_NAME}/.zsh_history

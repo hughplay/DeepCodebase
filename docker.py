@@ -22,6 +22,7 @@ DEFAULT_PROJECT_NAME = "mnist"
 DEFAULT_CODE_ROOT = "."
 DEFAULT_DATA_ROOT = "data"
 DEFAULT_LOG_ROOT = "log"
+DEFAULT_CACHE_ZSH_HISTORY = "./docker/misc/.zsh_history"
 
 
 class Env:
@@ -101,7 +102,7 @@ def prepare_parser():
 
 
 def main(args):
-    _set_env(verbose=(args.action == "preapre"))
+    _set_env(verbose=(args.action == "prepare"))
 
     service_name = "project"
     if args.action == "prepare":
@@ -171,6 +172,24 @@ def _set_env(env_path=DEFAULT_ENV_PATH, verbose=False):
             ):
                 log_root.mkdir(parents=True)
         e["LOG_ROOT"] = str(log_root)
+
+    if "CACHE_ZSH_HISTORY" not in e:
+        cache_zsh_history = Path(
+            _get_value_from_stdin(
+                "file to be synced with ~/.zsh_history",
+                default=DEFAULT_CACHE_ZSH_HISTORY,
+            )
+        ).resolve()
+        if not cache_zsh_history.exists():
+            if (
+                _get_value_from_stdin(
+                    f"`{cache_zsh_history}` does not exist in your machine. Create?",
+                    default="yes",
+                )
+                == "yes"
+            ):
+                cache_zsh_history.touch()
+        e["CACHE_ZSH_HISTORY"] = str(cache_zsh_history)
 
     e["COMPOSE_PROJECT_NAME"] = f"{e['PROJECT']}_{e['USER_NAME']}".lower()
     e.save()

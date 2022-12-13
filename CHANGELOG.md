@@ -26,6 +26,13 @@
 - [ ] add demo with gradio
 
 
+## 2022-12-13 14:11:01
+
+- [x] change `setup.cfg` to support `logger.info` in `pytest`.
+- [x] keep shell history: link .zsh_history to `./docker/misc/.zsh_history`
+
+There is an error when exiting zsh: `zsh: can't rename /home/hongxin/.zsh_history.new to $HISTFILE`. This is because `~/.zsh_history` is not removable. I guess if you start only one zsh shell and the history should be saved normally.
+
 ## 2022-10-13 16:34:17
 
 - [x] update overview image
