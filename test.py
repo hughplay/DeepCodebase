@@ -71,6 +71,7 @@ def test_example(config):
 
 def test(
     logdir: Union[str, Path],
+    ckpt: Union[str, Path] = "best",
     update_config_func: Union[Callable, List[Callable]] = test_original,
     update_wandb: bool = False,
     wandb_entity: str = None,
@@ -79,7 +80,7 @@ def test(
     logdir = Path(logdir).expanduser()
     os.chdir(logdir)
 
-    # load expriment record from logdir
+    # load experiment record from logdir
     experiment = Experiment(logdir, wandb_entity=wandb_entity)
 
     # deal with update_config_func & metrics_prefix
@@ -117,14 +118,14 @@ def test(
         datamodule = instantiate(config.dataset)
 
         # initialize model
-        model = experiment.get_pipeline_model_loaded("best")
+        pipeline = experiment.get_pipeline_model_loaded(ckpt, config=config)
 
         # initialize trainer
         cfg_trainer = prepare_trainer_config(config, logging=False)
         trainer = pl.Trainer(**cfg_trainer)
 
         # testing
-        results = trainer.test(model, datamodule=datamodule)
+        results = trainer.test(pipeline, datamodule=datamodule)
 
         if trainer.global_rank == 0:
             # log results
@@ -166,6 +167,7 @@ def test(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("logdir")
+    parser.add_argument("--ckpt", default="best")
     parser.add_argument(
         "--update_func",
         nargs="+",
@@ -189,6 +191,7 @@ if __name__ == "__main__":
 
     test(
         args.logdir,
+        ckpt=args.ckpt,
         update_config_func=update_config_func,
         update_wandb=args.update_wandb,
         wandb_entity=args.entity,

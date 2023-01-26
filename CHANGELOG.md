@@ -24,12 +24,32 @@
 - [ ] add introduction of PytorchLightning: https://towardsdatascience.com/pytorch-lightning-vs-deepspeed-vs-fsdp-vs-ffcv-vs-e0d6b2a95719
 - [ ] add model visualization
 - [ ] add demo with gradio
+- [ ] define what criterion should do
+    - reset
+    - forward (update)
+    - compute
+    - save
+- [ ] generate latex table, training with `baseline` tag
 
+## Currently Working On
 
-## 2022-12-13 14:11:01
+## 2023-01-26 13:57:38
+
+- [x] upgrade docker.py
+
+We design to make train, test, and val share the same criterion object, since these stages are chronological.
+
+- [x] profiler should be closed to make training faster, previous used: simple.
+- [x] add section about profiling
+- [x] add ckpt argument for `test.py`
+- [x] add batch_training
+
+## 2022-12-14 15:54:06
 
 - [x] change `setup.cfg` to support `logger.info` in `pytest`.
 - [x] keep shell history: link .zsh_history to `./docker/misc/.zsh_history`
+- [x] adjust method to obtain num_training_steps
+- [x] add model parameter to wandb log
 
 There is an error when exiting zsh: `zsh: can't rename /home/hongxin/.zsh_history.new to $HISTFILE`. This is because `~/.zsh_history` is not removable. I guess if you start only one zsh shell and the history should be saved normally.
 

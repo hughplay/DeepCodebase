@@ -1,4 +1,5 @@
 import logging
+import tempfile
 from collections import OrderedDict
 from datetime import datetime
 from pathlib import Path
@@ -17,7 +18,9 @@ logger = logging.getLogger(__name__)
 
 
 def register_omegaconf_resolver():
-    OmegaConf.register_new_resolver("tail", lambda x: x.split(".")[-1])
+    OmegaConf.register_new_resolver(
+        "tail", lambda x: x.split(".")[-1], replace=True
+    )
 
 
 @rank_zero_only
@@ -135,6 +138,14 @@ class Experiment:
     def last_ckpt_path(self):
         return self.ckpt_dir / "last.ckpt"
 
+    def ckpt_path(self, ckpt_name):
+        if self.ckpt_dir / f"{ckpt_name}.ckpt".exists():
+            return self.ckpt_dir / f"{ckpt_name}.ckpt"
+        elif self.ckpt_dir / f"{ckpt_name}".exists():
+            return self.ckpt_dir / f"{ckpt_name}"
+        else:
+            return None
+
     def _load_config(self):
         config = None
         if self.config_path.exists():
@@ -153,24 +164,30 @@ class Experiment:
             )
         return config
 
-    def get_pipeline_model_loaded(self, ckpt="best"):
+    def get_pipeline_model_loaded(self, ckpt="best", config=None):
+        if config is None:
+            config = self.config
         if ckpt == "best":
             ckpt_path = self.best_ckpt_path
         elif ckpt == "last":
             ckpt_path = self.last_ckpt_path
-        elif Path(ckpt).exists():
-            ckpt_path = Path(ckpt)
+        elif self.ckpt_path(ckpt) is not None:
+            ckpt_path = self.ckpt_path(ckpt)
         else:
             raise ValueError(f"ckpt {ckpt} does not exist")
 
         logger.info(f"loading {ckpt_path}")
-        pipeline_cfg = dict(self.config["pipeline"])
+        pipeline_cfg = dict(config["pipeline"])
         pipeline_cfg[
             "_target_"
         ] = f"{pipeline_cfg['_target_']}.load_from_checkpoint"
         pipeline_cfg["checkpoint_path"] = ckpt_path
-        model = instantiate(pipeline_cfg)
-        model.cfg = self.config
+        # set LightningModule.cfg from hparams_file
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml") as f:
+            f.write(OmegaConf.to_yaml(config, resolve=True))
+            f.flush()
+            pipeline_cfg["hparams_file"] = f.name
+            model = instantiate(pipeline_cfg)
         return model
 
 

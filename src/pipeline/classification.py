@@ -1,10 +1,9 @@
 import logging
 from typing import Any, Dict, List
 
-import torch
 from hydra.utils import instantiate
 from pytorch_lightning import LightningModule
-from pytorch_lightning.utilities.rank_zero import rank_zero_info
+from pytorch_lightning.utilities.memory import get_model_size_mb
 
 logger = logging.getLogger(__name__)
 
@@ -63,17 +62,10 @@ class ClassificationLitModule(LightningModule):
     def _set_num_training_steps(self, scheduler_cfg):
         if "num_training_steps" in scheduler_cfg:
             scheduler_cfg = dict(scheduler_cfg)
-            if self.global_rank == 0:
-                logger.info("Computing number of training steps...")
-                num_training_steps = [self.num_training_steps()]
-            else:
-                num_training_steps = [0]
-            torch.distributed.broadcast_object_list(
-                num_training_steps,
-                0,
-                group=torch.distributed.group.WORLD,
-            )
-            scheduler_cfg["num_training_steps"] = num_training_steps[0]
+            logger.info("Computing number of training steps...")
+            scheduler_cfg[
+                "num_training_steps"
+            ] = self.trainer.estimated_stepping_batches
 
             if self.global_rank == 0:
                 logger.info(
@@ -86,6 +78,13 @@ class ClassificationLitModule(LightningModule):
         # so we need to make sure val_acc_best doesn't store accuracy from these checks
         # self.val_acc_best.reset()
         self.criterion.train_start()
+
+        self.log(
+            "model_size/total",
+            get_model_size_mb(self.model),
+            rank_zero_only=True,
+            logger=True,
+        )
 
     def step(self, batch: Any, stage="train"):
         features, targets = batch

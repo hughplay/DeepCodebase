@@ -8,7 +8,7 @@ deterministic: true
 precision: 32
 accumulate_grad_batches: 1
 
-profiler: simple
+profiler: null
 weights_summary: top
 
 max_epochs: 10
