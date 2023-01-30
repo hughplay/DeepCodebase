@@ -12,6 +12,6 @@ profiler: null
 weights_summary: top
 
 max_epochs: 10
-val_check_interval: 0.5
+val_check_interval: 1.
 
 default_root_dir: ./

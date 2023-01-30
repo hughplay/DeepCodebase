@@ -3,7 +3,7 @@ from typing import Dict
 import torch
 from torch import nn
 from torchmetrics import MaxMetric
-from torchmetrics.classification.accuracy import Accuracy
+from torchmetrics.classification.accuracy import MulticlassAccuracy
 
 
 class ClassificationCriterion(nn.Module):
@@ -20,9 +20,9 @@ class ClassificationCriterion(nn.Module):
 
         # use separate metric instance for train, val and test step
         # to ensure a proper reduction over the epoch
-        self.acc_train = Accuracy()
-        self.acc_val = Accuracy()
-        self.acc_test = Accuracy()
+        self.acc_train = MulticlassAccuracy(num_classes=10)
+        self.acc_val = MulticlassAccuracy(num_classes=10)
+        self.acc_test = MulticlassAccuracy(num_classes=10)
 
         self.acc = {
             "train": self.acc_train,

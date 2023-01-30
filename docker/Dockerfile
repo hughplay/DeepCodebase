@@ -54,6 +54,7 @@ RUN if [ $USER_NAME != "root" ] ; \
 # Copy installed configuration files from root to user
 COPY misc/init_workspace /usr/local/bin
 RUN /usr/local/bin/init_workspace --user ${USER_NAME} --home /home/${USER_NAME}
+RUN cp -r /home/${USER_NAME} /${USER_NAME}_home_bak
 
 
 # Switch to the created user
