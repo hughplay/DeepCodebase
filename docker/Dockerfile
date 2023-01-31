@@ -1,7 +1,7 @@
 # ==================================================
 # Based on deepbase/project:codebase
 # You can find the Dockerfile from:
-# https://hub.docker.com/r/nvidia/cuda/tags
+# https://github.com/deepcodebase/docker/blob/master/project/codebase/Dockerfile
 #
 # Alternatively, you can build the image from scratch by using Dockerfile.full
 # ==================================================

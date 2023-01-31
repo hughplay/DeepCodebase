@@ -76,15 +76,19 @@ Launch training with:
 python train.py experiment=mnist_dnn
 ```
 
+or launch multiple training at once:
+
+```bash
+python scripts/batch_train.py scripts/training/train_baselines.sh
+```
+
 **6. View results on wandb**
 
 The training results will be automatically uploaded to wandb. You can view the results on [wandb.ai](https://wandb.ai).
 
 **7. Custom your own project**
 
-...
-
-Check our [document](https://hongxin19.github.io/deepcodebase/) for more details.
+Modify the code to fit your own deep learning project. Check our [document](https://hongxin19.github.io/deepcodebase/) for more details.
 
 
 ## Cite us
@@ -102,6 +106,10 @@ Give a star and cite us if you find this project useful.
 ``` md
 *This is a project based on [DeepCodebase](https://github.com/hughplay/DeepCodebase) template.*
 ```
+
+## Projects based on DeepCodebase
+
+- [TVR](https://github.com/hughplay/TVR/tree/pami)
 
 ## License
 

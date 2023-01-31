@@ -87,7 +87,7 @@ RUN pip install --no-cache-dir \
 
 
 # ==================================================
-# Tools installation (optional)
+# *Tools installation (optional)
 #
 # You find some tools useful or unwanted, comment or uncomment them as you wish.
 # Check this page for more installation commands:
@@ -159,7 +159,7 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
 # RUN wget https://raw.githubusercontent.com/hughplay/lightvim/master/install.sh -O - | sh
 
 # ==================================================
-# Fonts installation
+# *Fonts installation
 #
 # Install fonts that are commonly used in plotting.
 # Question: "Which font looks best in a scientific figure?"

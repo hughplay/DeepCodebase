@@ -1,14 +1,14 @@
-"""Run exmperiments in the docker container. Quick Start:
+"""Run experiments in the docker container. Quick Start:
 
 # Step 1. Install docker-compose in your workspace.
 pip install docker-compose
 # Step 2. Build docker image and start docker container once.
-python docker.py prepare --build
+python docker.py startd --build
 # Step 3. Enter the docker container at any time, start experiments now.
-python docker.py [enter]
+python docker.py
 
 # Enter the docker container using root account.
-python docker.py [enter] --root
+python docker.py --root
 """
 import argparse
 import os
