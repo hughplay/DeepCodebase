@@ -227,5 +227,5 @@ RUN cp -r /home/${USER_NAME} /${USER_NAME}_home_bak
 USER ${USER_NAME}
 
 
-# Set working directory to /workspace
-WORKDIR "/workspace"
+# Set working directory to /project
+WORKDIR "/project"

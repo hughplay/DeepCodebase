@@ -29,9 +29,13 @@
     - forward (update)
     - compute
     - save
-- [ ] generate latex table, training with `baseline` tag
 
 ## Currently Working On
+
+## 2023-03-09 10:49:54
+
+- [x] generate latex table, training with `baseline` tag
+- [x] fix typo in Dockerfile & README
 
 ## 2023-01-31 00:32:10
 

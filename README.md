@@ -86,9 +86,56 @@ python scripts/batch_train.py scripts/training/train_baselines.sh
 
 The training results will be automatically uploaded to wandb. You can view the results on [wandb.ai](https://wandb.ai).
 
-**7. Custom your own project**
+**7. Generate Latex table**
+
+After training multiple models, you can generate a latex table with:
+
+```bash
+python scripts/gen_latex_table.py --table baseline
+```
+
+This will generate a table like this:
+
+```latex
+\usepackage{booktabs}
+
+\begin{table}[t]
+\centering
+\small
+\caption{Performance on the MNIST dataset. }
+\label{tab:baseline}
+\begin{tabular}{lr}
+\toprule
+Model & Accuracy \\
+\midrule
+DNN & 0.974566 \\
+LeNet & \textbf{0.983000} \\
+\bottomrule
+\end{tabular}
+\end{table}
+```
+
+**8. Custom your own project**
 
 Modify the code to fit your own deep learning project. Check our [document](https://hongxin19.github.io/deepcodebase/) for more details.
+
+
+**9. Commit you modifications**
+
+We strongly recommend you to use [pre-commit](https://pre-commit.com/) to check your code before commiting. Before you first commit, you need to install the pre-commit hook with:
+
+```bash
+pre-commit install
+```
+
+Then, you can commit your modifications with normal git commands.
+
+```bash
+git add .
+git commit -m "commit message"
+```
+
+It will show you the errors if your code does not pass the pre-commit checks. After you fix the errors, you need to git add the modified files and commit again.
 
 
 ## Cite us
@@ -109,7 +156,7 @@ Give a star and cite us if you find this project useful.
 
 ## Projects based on DeepCodebase
 
-- [TVR](https://github.com/hughplay/TVR/tree/pami)
+- [TVR](https://github.com/hughplay/TVR)
 
 ## License
 
