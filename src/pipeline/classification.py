@@ -140,6 +140,7 @@ class ClassificationLitModule(LightningModule):
             on_step=False,
             on_epoch=True,
             prog_bar=False,
+            sync_dist=True,
         )
         self.log(
             "val/acc",
@@ -147,6 +148,7 @@ class ClassificationLitModule(LightningModule):
             on_step=False,
             on_epoch=True,
             prog_bar=True,
+            sync_dist=True,
         )
 
         return {
@@ -161,6 +163,7 @@ class ClassificationLitModule(LightningModule):
             self.criterion.val_acc_best,
             on_epoch=True,
             prog_bar=True,
+            sync_dist=True,
         )
         self.criterion.epoch_end(stage="val")
 

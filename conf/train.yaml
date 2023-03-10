@@ -7,7 +7,7 @@ defaults:
   - optim: adamw
   - scheduler: step
   - pl_trainer: default
-  - callbacks: [checkpoint, lr_monitor, rich]
+  - callbacks: [checkpoint, lr_monitor, rich, summary]
   - logging: default
   - logdir: default
 

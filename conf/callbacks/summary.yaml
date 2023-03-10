@@ -1,0 +1,3 @@
+summary:
+  _target_: pytorch_lightning.callbacks.RichModelSummary
+  max_depth: 2

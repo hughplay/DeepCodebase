@@ -29,8 +29,17 @@
     - forward (update)
     - compute
     - save
+- [ ] update doc to use [pdoc](https://pdoc3.github.io/pdoc/)
+    - ref: https://saattrupdan.github.io/2022-08-28-makefu/
+
 
 ## Currently Working On
+
+
+## 2023-03-10 09:59:04
+
+- [x] update pl to 1.9.4
+- [x] add Makefile to simplify the commands
 
 ## 2023-03-09 10:49:54
 

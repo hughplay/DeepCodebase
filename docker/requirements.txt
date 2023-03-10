@@ -3,7 +3,7 @@
 # =============================================
 torch>=1.8.1
 torchvision>=0.9.1
-pytorch-lightning==1.6.5
+pytorch-lightning==1.9.4
 torchmetrics
 
 # =============================================
@@ -28,6 +28,8 @@ Jinjia2
 # openpyxl==3.0.10
 # matplotlib==3.5.2
 # scikit-learn==1.1.1
+# pingouin
+# scipy
 
 # =============================================
 # Computer Vision

@@ -37,6 +37,27 @@
 
 ## Quick Start
 
+
+TLDR; We have prepare the commands in the `Makefile` for you:
+
+```bash
+# use the template and clone the new project to local
+# change the directory to the new project
+make init           # run in host
+make in             # run in host
+make wandb_login
+make train
+make table
+# ctrl + d to exit the container
+make copy_git      # run in host
+make in            # run in host
+# modify the project and prepare to commit
+make precommit_install
+make commit
+```
+
+Below is the detailed instructions.
+
 **1. Create new project from template**
 
 Click [[Use this template]](https://github.com/hughplay/DeepCodebase/generate) to create a new project from this template.
@@ -55,7 +76,7 @@ git clone <repo url>
 Build the docker image and launch the container with:
 
 ```bash
-python docker.py startd
+python docker.py startd --build
 ```
 
 **4. Enter the docker container**
