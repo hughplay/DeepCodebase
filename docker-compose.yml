@@ -27,12 +27,12 @@ services:
     working_dir: /project
 
     # command: ["sleep", "infinity"]
-    command:
-      [
-        "/bin/bash",
-        "-c",
-        "/bin/rsync -avP /${USER_NAME}_home_bak/ /home/${USER_NAME} --ignore-existing && . /home/${USER_NAME}/.bashrc && sleep infinity",
-      ]
+    command: >
+      bash -c
+      "sudo rsync -a --stats --chown=${USER_NAME}:${USER_NAME} --ignore-existing
+      /${USER_NAME}_home_bak/ /home/${USER_NAME}
+      && . /home/${USER_NAME}/.bashrc
+      && sleep infinity"
 
     # mount the <directory in host> to the <directory in container>
     # add more mounts here if you need
