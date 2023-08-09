@@ -41,19 +41,19 @@
 TLDR; We have prepare the commands in the `Makefile` for you:
 
 ```bash
-# use the template and clone the new project to local
-# change the directory to the new project
-make init           # run in host
-make in             # run in host
-make wandb_login
-make train
-make table
-# ctrl + d to exit the container
-make copy_git      # run in host
-make in            # run in host
-# modify the project and prepare to commit
-make precommit_install
-make commit
+make init                           # run in host, build a docker image for api server and launch the container
+make in                             # run in host, ctrl + d to exit the container
+
+# experiment
+make wandb_login                    # run in container, login to wandb
+make train                          # run in container, train the model
+make table                          # run in container, generate the latex table
+
+# commit
+make copy_git                       # run in host, copy git config to the container home
+make precommit_install              # run in container, prepare pre-commit for tidy code
+git add . && git commit -m "xxx"    # run in container, commit code, it will run pre-commit check
+
 ```
 
 Below is the detailed instructions.
@@ -100,7 +100,7 @@ python train.py experiment=mnist_dnn
 or launch multiple training at once:
 
 ```bash
-python scripts/batch_train.py scripts/training/train_baselines.sh
+python batchrun.py scripts/training/train_baselines.sh --quotas 1
 ```
 
 **6. View results on wandb**
