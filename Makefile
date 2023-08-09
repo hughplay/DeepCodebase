@@ -1,6 +1,6 @@
 # ref: https://saattrupdan.github.io/2022-08-28-makefu/
 # ref: https://gist.github.com/MarkWarneke/2e26d7caef237042e9374ebf564517ad
-include .env
+-include .env
 
 # run on host
 init:

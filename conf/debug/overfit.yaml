@@ -5,6 +5,6 @@
 defaults:
   - default.yaml
 
-pl_trainer:
+trainer:
   max_epochs: 20
   overfit_batches: 3

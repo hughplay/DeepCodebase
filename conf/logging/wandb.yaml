@@ -1,5 +1,5 @@
 wandb:
-  _target_: pytorch_lightning.loggers.WandbLogger
+  _target_: lightning.pytorch.loggers.WandbLogger
   save_dir: .
   name: ${name}
   version: ${exp_id}

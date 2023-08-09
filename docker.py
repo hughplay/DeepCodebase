@@ -22,7 +22,7 @@ DEFAULT_PROJECT_NAME = "mnist"
 DEFAULT_CODE_ROOT = "."
 DEFAULT_DATA_ROOT = "data"
 DEFAULT_LOG_ROOT = "log"
-DEFAULT_CONTAINER_HOME = "./docker/misc/container_home"
+DEFAULT_CONTAINER_HOME = "container_home"
 
 
 class Env:
@@ -90,7 +90,17 @@ def execute(command):
         p.wait()
 
 
-def main(args):
+def main():
+    parser = argparse.ArgumentParser(
+        description="The core script of experiment management."
+    )
+    parser.add_argument("action", nargs="?", default="enter")
+    parser.add_argument("-b", "--build", action="store_true", default=False)
+    parser.add_argument("--root", action="store_true", default=False)
+    parser.add_argument("--service", default="project")
+
+    args = parser.parse_args()
+
     _set_env(verbose=(args.action == "start" or args.action == "startd"))
 
     SHELL = "zsh" if args.service == "project" else "bash"
@@ -109,6 +119,7 @@ def main(args):
             command = f"docker-compose exec {args.service} {SHELL}"
     else:
         command = f"docker-compose {args.action}"
+    command = "DOCKER_BUILDKIT=1 " + command
     print(f"> {command}\n")
     execute(command)
 
@@ -184,6 +195,10 @@ def _set_env(env_path=DEFAULT_ENV_PATH, verbose=False):
             ):
                 container_home.mkdir(parents=True, exist_ok=True)
         e["CONTAINER_HOME"] = str(container_home)
+        if e["USER_NAME"] != "root":
+            e["TARGET_HOME"] = f"/home/{e['USER_NAME']}"
+        else:
+            e["TARGET_HOME"] = "/root"
 
     e["COMPOSE_PROJECT_NAME"] = f"{e['PROJECT']}_{e['USER_NAME']}".lower()
     e.save()
@@ -194,14 +209,4 @@ def _set_env(env_path=DEFAULT_ENV_PATH, verbose=False):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="The core script of experiment management."
-    )
-    parser.add_argument("action", nargs="?", default="enter")
-    parser.add_argument("-b", "--build", action="store_true", default=False)
-    parser.add_argument("--root", action="store_true", default=False)
-    parser.add_argument("--service", default="project")
-
-    args = parser.parse_args()
-
-    main(args)
+    main()

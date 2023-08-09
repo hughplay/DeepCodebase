@@ -154,7 +154,7 @@ Seems that logging has no obvious weakness. And it may waste time to figure out 
     - [x] optim
     - [x] scheduler
     - [x] pipeline
-    - [x] pl_trainer
+    - [x] trainer
     - [x] logging
     - [x] optim
     - [x] logdir

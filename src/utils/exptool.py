@@ -9,8 +9,8 @@ import rich
 import rich.syntax
 import rich.tree
 from hydra.utils import instantiate
+from lightning.pytorch.utilities import rank_zero_only
 from omegaconf import DictConfig, OmegaConf, open_dict
-from pytorch_lightning.utilities import rank_zero_only
 from rich.panel import Panel
 from rich.syntax import Syntax
 
@@ -33,7 +33,7 @@ def print_config(
         "criterion",
         "optim",
         "scheduler",
-        "pl_trainer",
+        "trainer",
         "callbacks",
         "logging",
         "logdir",
@@ -259,7 +259,7 @@ def try_resume(cfg, replace_wandb_only=False):
 
 
 def prepare_trainer_config(cfg, logging=True):
-    cfg_trainer = dict(cfg.pl_trainer)
+    cfg_trainer = dict(cfg.trainer)
 
     if logging and "logging" in cfg:
         loggers = []
@@ -274,7 +274,7 @@ def prepare_trainer_config(cfg, logging=True):
         cfg_trainer["callbacks"] = callbacks
 
     if cfg_trainer["strategy"] == "ddp":
-        from pytorch_lightning.strategies.ddp import DDPStrategy
+        from lightning.pytorch.strategies.ddp import DDPStrategy
 
         cfg_trainer["strategy"] = DDPStrategy(find_unused_parameters=False)
 

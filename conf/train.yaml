@@ -6,7 +6,7 @@ defaults:
   - criterion: classification
   - optim: adamw
   - scheduler: step
-  - pl_trainer: default
+  - trainer: default
   - callbacks: [checkpoint, lr_monitor, rich, summary]
   - logging: default
   - logdir: default

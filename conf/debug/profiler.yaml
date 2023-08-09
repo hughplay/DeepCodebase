@@ -5,7 +5,7 @@
 defaults:
   - default.yaml
 
-pl_trainer:
+trainer:
   max_epochs: 1
   profiler: "simple"
   # profiler: "advanced"

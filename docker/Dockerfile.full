@@ -1,26 +1,7 @@
-# ==================================================
-# This is the full Dockerfile for the environment building.
-#
-# Sections with * have been build into an existing image:
-# deepbase/project:codebase
-# This image can be found in docker hub:
-# https://hub.docker.com/r/deepbase/project/tags
-# ==================================================
+# dockerlab template: workspace_pytorch_1_13 (full)
+# https://github.com/hughplay/dockerlab
 
-# ==================================================
-# *Based on cuda11.1-cudnn8-devel-ubuntu20.04
-#
-# Other base images are listed in:
-# https://hub.docker.com/r/nvidia/cuda/tags
-#
-# The version of some basic packages:
-#   - Python: 3.8
-#   - Pytorch: 1.8.2
-#
-# Change these versions by yourself if needed.
-# ==================================================
-FROM nvidia/cuda:11.1.1-cudnn8-devel-ubuntu20.04
-
+FROM nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04
 
 # Set default RUN shell to /bin/bash
 SHELL ["/bin/bash", "-cu"]
@@ -29,10 +10,6 @@ SHELL ["/bin/bash", "-cu"]
 # Set environment variables
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
-
-
-# TUNA Mirror (optional)
-# COPY project/codebase/misc/sources.list.ubuntu20.04 /etc/apt/sources.list
 
 
 # Install basic packages for compiling and building
@@ -66,24 +43,6 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -
     && rm -f /tmp/install-conda.sh \
     && conda install -y python=${PYTHON_VERSION} \
     && conda clean -y --all
-
-
-# Install Pytorch LTS (1.8.2)
-# you can find other versions and installation commands from:
-# https://pytorch.org/get-started/previous-versions/
-RUN pip install --no-cache-dir \
-    torch==1.8.2 \
-    torchvision==0.9.2 \
-    torchaudio==0.8.2 \
-    --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu111
-
-# Below is the example installation command for stable versions:
-# ENV PYTORCH_VERSION=1.8.2
-# ENV TORCHVISION_VERSION=0.9.2
-# RUN pip install --no-cache-dir \
-#     torch==${PYTORCH_VERSION} \
-#     torchvision==${TORCHVISION_VERSION} \
-#     -f https://download.pytorch.org/whl/torch_stable.html
 
 
 # ==================================================
@@ -137,26 +96,28 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
 
 
 # Install Tmux
-# RUN apt-get update && apt-get install -y libevent-dev ncurses-dev automake pkg-config \
-#     && cd /tmp \
-#     && wget -O tmux-2.8.tar.gz https://github.com/tmux/tmux/archive/2.8.tar.gz \
-#     && tar zxvf tmux-2.8.tar.gz \
-#     && cd tmux-2.8 \
-#     && ./autogen.sh \
-#     && ./configure --prefix=/usr/local \
-#     && make \
-#     && make install \
-#     && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libevent-dev ncurses-dev automake pkg-config \
+    && cd /tmp \
+    && wget -O tmux-2.8.tar.gz https://github.com/tmux/tmux/archive/2.8.tar.gz \
+    && tar zxvf tmux-2.8.tar.gz \
+    && cd tmux-2.8 \
+    && ./autogen.sh \
+    && ./configure --prefix=/usr/local \
+    && make \
+    && make install \
+    && rm -rf /tmp/tmux-2.8 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Tmux configuration
-# RUN git clone https://github.com/hughplay/tmux-config.git /tmp/tmux-config \
-#     && bash /tmp/tmux-config/install.sh \
-#     && rm -rf /tmp/tmux-config \
-#     && echo "set -g default-shell `which zsh`" >> ~/.tmux.conf
+RUN git clone https://github.com/hughplay/tmux-config.git /tmp/tmux-config \
+    && bash /tmp/tmux-config/install.sh \
+    && rm -rf /tmp/tmux-config \
+    && echo "set -g default-shell `which zsh`" >> ~/.tmux.conf
 
 
 # Install lightvim, a configuration for vim
 # RUN wget https://raw.githubusercontent.com/hughplay/lightvim/master/install.sh -O - | sh
+
 
 # ==================================================
 # *Fonts installation
@@ -167,6 +128,7 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
 # https://pubs.acs.org/doi/10.1021/acs.chemmater.6b00306
 # ==================================================
 
+
 RUN cd /tmp \
     && wget https://github.com/hughplay/memo/raw/master/code/snippet/drawing/plot_fonts.tar.gz \
     && tar zxvf plot_fonts.tar.gz \
@@ -174,20 +136,57 @@ RUN cd /tmp \
     && rm -rf plot_fonts.tar.gz plot_fonts \
     && fc-cache -fv
 
+# --------------------------------------------------------------------------------
+# FROM deepbase/dockerlab:workspace_cuda_11_7
+
+
+# Install Pytorch 1.13.1
+# you can find other versions and installation commands from:
+# https://pytorch.org/get-started/previous-versions/
+# https://github.com/pytorch/pytorch/wiki/PyTorch-Versions
+RUN pip install --no-cache-dir \
+    torch==1.13.1 \
+    torchvision==0.14.1 \
+    torchaudio==0.13.1 \
+    --extra-index-url https://download.pytorch.org/whl/cu117
+
+
+# --------------------------------------------------------------------------------
+# FROM deepbase/dockerlab:workspace_pytorch_1_13
+
 
 # ==================================================
 # Install python packages
 # ==================================================
 
+
 # Setup TUNA mirror (optional)
-RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-COPY misc/.condarc /root/.condarc
+# RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+# RUN cat <<EOT >> ~/.condarc
+# channels:
+#   - defaults
+# show_channel_urls: true
+# channel_alias: https://mirrors.tuna.tsinghua.edu.cn/anaconda
+# default_channels:
+#   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+#   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free
+#   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+#   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/pro
+#   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
+# custom_channels:
+#   conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+#   msys2: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+#   bioconda: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+#   menpo: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+#   pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+#   simpleitk: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+# EOT
+
 
 # By default, install packages from `requirements.txt` with pip.
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt \
     && rm -f /tmp/requirements.txt
-
 
 # Another way is installing packages from a `env.yaml` with conda.
 # COPY env.yaml /tmp/env.yaml
@@ -201,10 +200,9 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt \
 # prevent many privileges issues.
 # ==================================================
 
-# COPY .localrc
-COPY misc/.localrc /root
-RUN echo ". ~/.localrc" >> ~/.zshrc
 
+# TUNA mirror for apt
+# RUN sed -i -e 's/archive.ubuntu.com/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
 
 # Add a user with the same UID and GID as the host user, to prevent privilege issues.
 ARG USER_ID=1011
@@ -221,8 +219,10 @@ RUN if [ $USER_NAME != "root" ] ; \
 COPY misc/init_workspace /usr/local/bin
 RUN chmod +x /usr/local/bin/init_workspace
 RUN /usr/local/bin/init_workspace --user ${USER_NAME} --home /home/${USER_NAME}
-RUN rsync -a /home/${USER_NAME}/ /${USER_NAME}_home_bak
 
+
+# backup $HOME for reverse mounting $HOME
+RUN rsync -a /home/${USER_NAME}/ /${USER_NAME}_home_bak
 
 
 # Switch to the created user

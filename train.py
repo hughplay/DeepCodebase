@@ -3,7 +3,7 @@ from pathlib import Path
 
 import dotenv
 import hydra
-import pytorch_lightning as pl
+import lightning as lt
 from hydra.utils import instantiate
 from omegaconf import DictConfig
 
@@ -17,8 +17,8 @@ from src.utils.exptool import (
 register_omegaconf_resolver()
 logger = logging.getLogger(__name__)
 
-pl._logger.handlers = []
-pl._logger.propagate = True
+lt._logger.handlers = []
+lt._logger.propagate = True
 
 dotenv.load_dotenv(override=True)
 
@@ -36,7 +36,7 @@ def main(cfg: DictConfig) -> None:
 
     # Set random seed
     if cfg.seed is not None:
-        pl.seed_everything(cfg.seed)
+        lt.seed_everything(cfg.seed)
 
     # Initialize datamodule
     datamodule = instantiate(cfg.dataset)
@@ -46,7 +46,7 @@ def main(cfg: DictConfig) -> None:
 
     # Initialize trainer
     cfg_trainer = prepare_trainer_config(cfg)
-    trainer = pl.Trainer(**cfg_trainer)
+    trainer = lt.Trainer(**cfg_trainer)
 
     # Training
     if cfg.resume_ckpt is not None:

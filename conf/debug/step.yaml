@@ -5,5 +5,5 @@
 defaults:
   - default.yaml
 
-pl_trainer:
+trainer:
   fast_dev_run: true

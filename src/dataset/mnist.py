@@ -1,7 +1,7 @@
 from typing import Optional, Tuple
 
 import torch
-from pytorch_lightning import LightningDataModule
+from lightning import LightningDataModule
 from torch.utils.data import ConcatDataset, DataLoader, Dataset, random_split
 from torchvision.datasets import MNIST
 from torchvision.transforms import transforms
@@ -38,7 +38,7 @@ class MNISTDataModule(LightningDataModule):
 
     Reading material:
     - Documentation: https://pytorch-lightning.readthedocs.io/en/stable/extensions/datamodules.html
-    - Source code: https://github.com/Lightning-AI/lightning/blob/master/src/pytorch_lightning/core/datamodule.py
+    - Source code: https://github.com/Lightning-AI/lightning/blob/master/src/lightning/core/datamodule.py
     """
 
     def __init__(

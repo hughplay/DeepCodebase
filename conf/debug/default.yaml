@@ -7,7 +7,7 @@ defaults:
   - override /logdir: debug
   - override /logging: null
 
-pl_trainer:
+trainer:
   max_epochs: 1
   devices: 1
   accelerator: gpu

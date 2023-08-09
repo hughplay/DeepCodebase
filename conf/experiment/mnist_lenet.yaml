@@ -5,5 +5,5 @@ notes: "This is a simple MNIST LeNet model."
 defaults:
   - override /model: lenet
 
-pl_trainer:
+trainer:
   devices: 1

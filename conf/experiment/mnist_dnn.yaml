@@ -5,5 +5,5 @@ notes: "This is a simple MNIST DNN model."
 defaults:
   - override /model: dnn
 
-pl_trainer:
+trainer:
   devices: 1

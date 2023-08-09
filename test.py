@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 from typing import Callable, Iterable, List, Union
 
-import pytorch_lightning as pl
+import lightning as lt
 import wandb
 from hydra import compose, initialize, initialize_config_dir
 from hydra.utils import instantiate, to_absolute_path
@@ -37,8 +37,8 @@ main_dir = Path(__file__).resolve().parent
 
 def default_override(config):
     # adjust values for devices
-    config.pl_trainer.num_nodes = 1
-    config.pl_trainer.devices = 1
+    config.trainer.num_nodes = 1
+    config.trainer.devices = 1
 
     # larger batch size for testing
     config.dataset.batch_size = config.dataset.batch_size * 2
@@ -112,7 +112,7 @@ def test(
         print_config(config)
 
         # seed everything
-        pl.seed_everything(config.seed)
+        lt.seed_everything(config.seed)
 
         # initialize datamodule
         datamodule = instantiate(config.dataset)
@@ -122,7 +122,7 @@ def test(
 
         # initialize trainer
         cfg_trainer = prepare_trainer_config(config, logging=False)
-        trainer = pl.Trainer(**cfg_trainer)
+        trainer = lt.Trainer(**cfg_trainer)
 
         # testing
         results = trainer.test(pipeline, datamodule=datamodule)

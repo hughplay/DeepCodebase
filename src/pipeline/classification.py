@@ -2,8 +2,8 @@ import logging
 from typing import Any, Dict, List
 
 from hydra.utils import instantiate
-from pytorch_lightning import LightningModule
-from pytorch_lightning.utilities.memory import get_model_size_mb
+from lightning import LightningModule
+from lightning.pytorch.utilities.memory import get_model_size_mb
 
 logger = logging.getLogger(__name__)
 
