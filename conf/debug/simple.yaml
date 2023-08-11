@@ -1,0 +1,13 @@
+# @package _global_
+
+# disable most of parallelism to make debugging easier
+
+defaults:
+  - default.yaml
+
+trainer:
+  devices: 1
+
+dataset:
+  num_workers: 0 # debuggers don't like multiprocessing
+  pin_memory: False # disable gpu memory pin

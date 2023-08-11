@@ -16,6 +16,7 @@ services:
       - TORCH_HOME=/data/torch_model
       - TRANSFORMERS_CACHE=/data/pretrain/transformers
       - CLIP_CACHE=/data/pretrain/clip
+      - DISPLAY=${DISPLAY}
 
     # change hostname to docker
     hostname: docker
@@ -51,3 +52,4 @@ services:
       - type: bind
         source: ${CONTAINER_HOME}
         target: ${TARGET_HOME}
+      - /tmp/.X11-unix:/tmp/.X11-unix

@@ -1,0 +1,25 @@
+# @package _global_
+
+# Profiling with PyTorch profiler
+#
+# Major documents:
+# - https://gist.github.com/mcarilli/376821aa1a7182dfcf59928a7cde3223
+# - https://docs.nvidia.com/nsight-systems/UserGuide/index.html
+# - https://docs.nvidia.com/nsight-systems/UserGuide/index.html#cli-profile-command-switch-options
+# - https://pytorch.org/docs/stable/profiler.html
+# - https://lightning.ai/docs/pytorch/1.9.5/tuning/profiler_intermediate.html#visualize-profiled-operations
+#
+
+defaults:
+  - default.yaml
+
+trainer:
+  max_epochs: 1
+  profiler:
+    _target_: lightning.pytorch.profilers.PyTorchProfiler
+    # emit_nvtx: true
+    dirpath: profiling
+    filename: pytorch_profiler
+    export_to_chrome: true
+  detect_anomaly: false # raise exception if NaN or +/-inf is detected in any tensor
+  track_grad_norm: "inf" # track gradient norm with loggers

@@ -7,6 +7,14 @@ defaults:
 
 trainer:
   max_epochs: 1
-  profiler: "simple"
+  # profiler: "simple"
   # profiler: "advanced"
   # profiler: "pytorch"
+  profiler:
+    _target_: lightning.pytorch.profilers.PyTorchProfiler
+    # emit_nvtx: true
+    dirpath: profiling
+    filename: pytorch_profiler
+    export_to_chrome: true
+  detect_anomaly: false # raise exception if NaN or +/-inf is detected in any tensor
+  track_grad_norm: "inf" # track gradient norm with loggers

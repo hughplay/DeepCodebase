@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 USER=$USER
 HOME=$HOME
@@ -12,11 +12,16 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
+echo "----------------------------------------------------"
 echo "Current User: $USER, Current Home: $HOME"
+echo "----------------------------------------------------"
+echo
 
+echo "----------------------------------------------------"
 echo "Copy conda, pip, tmux, zsh configurations into $HOME..."
-rsync -ai --chown=$USER:$USER \
-    /root/.localrc \
+echo "----------------------------------------------------"
+echo "export PATH=$HOME/.local/bin:$PATH" >> ~/.zshrc
+rsync -a --stats --ignore-missing-args --chown=$USER:$USER \
     /root/.conda \
     /root/.condarc \
     /root/.config \
@@ -25,14 +30,29 @@ rsync -ai --chown=$USER:$USER \
     /root/.tmux \
     /root/.tmux.conf \
     $HOME
+echo
 
-echo "Use zsh."
-chsh -s `which zsh` $USER
+echo "----------------------------------------------------"
+echo "The directory structure of $HOME:"
+echo "----------------------------------------------------"
+ls -alh $HOME
+echo
 
-echo "Initialize conda."
-conda init zsh bash
+echo "----------------------------------------------------"
+if [ -x "$(command -v zsh)" ]; then
+    echo "Use zsh."
+    chsh -s `which zsh` $USER
+fi
+
+if [ -x "$(command -v conda)" ]; then
+    echo "Initialize conda."
+    conda init zsh bash
+fi
+echo "----------------------------------------------------"
+echo
 
 echo "----------------------------------------------------"
 echo "- Enjoy the new environment!                       -"
 echo "- Contact @hughplay if you encounter any problems. -"
 echo "----------------------------------------------------"
+echo

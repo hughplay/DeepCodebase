@@ -54,6 +54,9 @@ make copy_git                       # run in host, copy git config to the contai
 make precommit_install              # run in container, prepare pre-commit for tidy code
 git add . && git commit -m "xxx"    # run in container, commit code, it will run pre-commit check
 
+# profiling
+python train.py experiment=mnist_lenet debug=profiler  # run in container, using pytorch profiler to profile the code
+make nsightrun cmd="python train.py experiment=mnist_lenet debug=nsight"  # run in container, launch a nsight system profiler
 ```
 
 Below is the detailed instructions.
@@ -94,13 +97,13 @@ The docker container is our development environment.
 Launch training with:
 
 ```bash
-python train.py experiment=mnist_dnn
+python train.py experiment=mnist_lenet
 ```
 
 or launch multiple training at once:
 
 ```bash
-python batchrun.py scripts/training/train_baselines.sh --quotas 1
+python batchrun.py scripts/train/train_baselines.sh --quotas 1
 ```
 
 **6. View results on wandb**

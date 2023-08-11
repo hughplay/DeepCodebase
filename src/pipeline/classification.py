@@ -84,6 +84,7 @@ class ClassificationLitModule(LightningModule):
             get_model_size_mb(self.model),
             rank_zero_only=True,
             logger=True,
+            sync_dist=True,
         )
 
     def step(self, batch: Any, stage="train"):
@@ -106,6 +107,7 @@ class ClassificationLitModule(LightningModule):
             on_step=False,
             on_epoch=True,
             prog_bar=False,
+            sync_dist=True,
         )
         self.log(
             "train/acc",
@@ -113,6 +115,7 @@ class ClassificationLitModule(LightningModule):
             on_step=False,
             on_epoch=True,
             prog_bar=True,
+            sync_dist=True,
         )
 
         # we can return here dict with any tensors
@@ -169,8 +172,20 @@ class ClassificationLitModule(LightningModule):
 
     def test_step(self, batch: Any, batch_idx: int):
         outputs = self.step(batch, stage="test")
-        self.log("test/loss", outputs["loss"], on_step=False, on_epoch=True)
-        self.log("test/acc", outputs["acc"], on_step=False, on_epoch=True)
+        self.log(
+            "test/loss",
+            outputs["loss"],
+            on_step=False,
+            on_epoch=True,
+            sync_dist=True,
+        )
+        self.log(
+            "test/acc",
+            outputs["acc"],
+            on_step=False,
+            on_epoch=True,
+            sync_dist=True,
+        )
 
         return {
             "loss": outputs["loss"],
