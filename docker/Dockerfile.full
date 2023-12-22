@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.4
 # dockerlab template: workspace_pytorch_1_13 (full)
 # https://github.com/hughplay/dockerlab
 
