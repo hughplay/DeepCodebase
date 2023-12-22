@@ -6,14 +6,12 @@ Usage:
 import argparse
 import subprocess
 import time
-from multiprocessing import Process, Queue
+from multiprocessing import Lock, Process, Queue
 from pathlib import Path
 
 import torch
 
 from src.utils.timetool import time2str
-
-TIMEOUT = 5
 
 
 def get_commands(path_to_script):
@@ -34,7 +32,7 @@ def get_commands(path_to_script):
     return commands
 
 
-def run_command(command, gpu_queue, quota, logdir):
+def run_command(command, gpu_queue, quota, lock, logdir):
     gpus = []
     p = None
     try:
@@ -42,18 +40,12 @@ def run_command(command, gpu_queue, quota, logdir):
 
         # try to get quota GPUs
         while True:
-            if gpu_queue.qsize() >= quota:
-                try:
+            with lock:
+                if gpu_queue.qsize() >= quota:
                     for _ in range(quota):
-                        gpus.append(gpu_queue.get(TIMEOUT))
+                        gpus.append(gpu_queue.get())
                     break
-                except Exception as e:
-                    print(f"Error: {e}")
-                    if len(gpus) > 0:
-                        for gpu in gpus:
-                            gpu_queue.put(gpu)
-                        gpus = []
-            time.sleep(1)
+            time.sleep(10)
 
         name = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
         args = command.split()
@@ -77,6 +69,8 @@ def run_command(command, gpu_queue, quota, logdir):
     except Exception as e:
         print(f"Error: {e}")
     finally:
+        if p is not None:
+            p.kill()
         if gpus is not None:
             for gpu in gpus:
                 gpu_queue.put(gpu)
@@ -97,15 +91,16 @@ def main(commands, gpus, quotas, logdir):
         quotas = quotas * len(commands)
 
     gpus_queue = Queue()
+    lock = Lock()
     for gpu in gpus:
         gpus_queue.put(gpu)
 
     processes = []
     for command, quota in zip(commands, quotas):
         process = Process(
-            target=run_command, args=(command, gpus_queue, quota, logdir)
+            target=run_command, args=(command, gpus_queue, quota, lock, logdir)
         )
-        time.sleep(1)
+        time.sleep(10)
         process.start()
         processes.append(process)
 

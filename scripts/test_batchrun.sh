@@ -1,3 +1,5 @@
+# python batchrun.py scripts/test_batchrun.sh --quotas 5 4 2 2
+# python batchrun.py scripts/test_batchrun.sh --quotas 4
 # replace the command below with your own command, e.g. python train.py
 echo "1. sleep 5s" \
     && sleep 5s

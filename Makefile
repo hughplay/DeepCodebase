@@ -35,3 +35,6 @@ push:
 
 nsightrun:
 	nsys profile -w true -t cuda,nvtx,osrt,cudnn,cublas -s cpu -o nsight_report -f true --cudabacktrace='all:10000' --osrt-threshold=10000 -x true $(cmd)
+
+jupyter:
+	jupyter lab --ip 0.0.0.0

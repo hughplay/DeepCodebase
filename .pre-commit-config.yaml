@@ -20,7 +20,7 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
-        args: ["--maxkb=1000"]
+        args: ["--maxkb=1500"]
       - id: debug-statements
       - id: detect-private-key
 
@@ -58,8 +58,15 @@ repos:
     hooks:
       - id: flake8
 
+  # remove unused imports
+  - repo: https://github.com/hadialqattan/pycln
+    rev: v2.2.1 # Possible releases: https://github.com/hadialqattan/pycln/releases
+    hooks:
+      - id: pycln
+
   # jupyter notebook cell output clearing
-  # - repo: https://github.com/kynan/nbstripout
-  #   rev: 0.5.0
-  #   hooks:
-  #     - id: nbstripout
+  # long jupyter notebook files will dominate the result of languages
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.5.0
+    hooks:
+      - id: nbstripout
