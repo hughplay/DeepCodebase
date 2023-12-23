@@ -10,6 +10,8 @@ services:
         - USER_ID=${UID}
         - GROUP_ID=${GID}
         - USER_NAME=${USER_NAME}
+        - http_proxy=${http_proxy}
+        - https_proxy=${https_proxy}
     image: ${PROJECT}:${USER_NAME}
     environment:
       - TZ=Asia/Shanghai
