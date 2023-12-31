@@ -278,9 +278,4 @@ def prepare_trainer_config(cfg, logging=True):
 
         cfg_trainer["strategy"] = DDPStrategy(find_unused_parameters=False)
 
-    if "_target_" in cfg_trainer["profiler"]:
-        if "emit_nvtx" in cfg_trainer["profiler"]:
-            logger.info("Emitting NVTX traces.")
-        cfg_trainer["profiler"] = instantiate(cfg_trainer["profiler"])
-
     return cfg_trainer
