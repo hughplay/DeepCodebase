@@ -1,0 +1,3 @@
+root_dir: ${oc.env:CODE_ROOT}
+output_dir: ${hydra:runtime.output_dir}
+work_dir: ${hydra:runtime.cwd}

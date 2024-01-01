@@ -9,4 +9,4 @@ accumulate_grad_batches: 1
 profiler: null
 max_epochs: 10
 val_check_interval: 1.
-default_root_dir: ./
+default_root_dir: ${paths.output_dir}

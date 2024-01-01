@@ -23,7 +23,7 @@ lt._logger.propagate = True
 dotenv.load_dotenv(override=True)
 
 
-@hydra.main(config_path="conf", config_name="train")
+@hydra.main(version_base="1.3", config_path="conf", config_name="train")
 def main(cfg: DictConfig) -> None:
 
     # Assign hydra.run.dir=<previous_log_dir> to resume training.
@@ -32,7 +32,8 @@ def main(cfg: DictConfig) -> None:
     cfg = try_resume(cfg)
 
     # Print & save config to logdir
-    print_config(cfg, save_path="config.yaml")
+    output_dir = Path(cfg.paths.output_dir)
+    print_config(cfg, save_path=output_dir / "config.yaml")
 
     # Set random seed
     if cfg.seed is not None:

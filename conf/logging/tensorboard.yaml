@@ -1,5 +1,5 @@
 tensorboard:
   _target_: lightning.pytorch.loggers.TensorBoardLogger
-  save_dir: .
+  save_dir: ${paths.output_dir}
   name: log
   version: tb
