@@ -1,7 +1,9 @@
-# Using gpus to train the model
+defaults:
+  - strategy: ddp
+
+_target_: lightning.Trainer
 accelerator: gpu
 devices: 1
-strategy: ddp
 sync_batchnorm: True
 deterministic: true
 precision: 32

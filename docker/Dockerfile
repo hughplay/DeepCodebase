@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.4
-# dockerlab template: workspace_pytorch_1_13
+# dockerlab template: workspace_pytorch_2_1
 # https://github.com/hughplay/dockerlab
 
-FROM deepbase/dockerlab:workspace_pytorch_1_13
+FROM deepbase/dockerlab:workspace_pytorch_2_1
 
 
 # ==================================================

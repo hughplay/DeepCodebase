@@ -16,7 +16,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - TORCH_HOME=/data/torch_model
-      - TRANSFORMERS_CACHE=/data/pretrain/transformers
+      - HF_HOME=/data/pretrain/transformers
       - CLIP_CACHE=/data/pretrain/clip
       - DISPLAY=${DISPLAY}
 

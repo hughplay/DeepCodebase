@@ -14,6 +14,8 @@ from omegaconf import DictConfig, OmegaConf, open_dict
 from rich.panel import Panel
 from rich.syntax import Syntax
 
+from src.utils.torchtool import is_rank_zero
+
 logger = logging.getLogger(__name__)
 
 
@@ -41,7 +43,6 @@ def print_config(
     resolve: bool = True,
     save_path: str = None,
 ) -> None:
-
     ordered_config = OrderedDict()
     for key in print_order:
         if key in config:
@@ -139,9 +140,9 @@ class Experiment:
         return self.ckpt_dir / "last.ckpt"
 
     def ckpt_path(self, ckpt_name):
-        if self.ckpt_dir / f"{ckpt_name}.ckpt".exists():
+        if (self.ckpt_dir / f"{ckpt_name}.ckpt").exists():
             return self.ckpt_dir / f"{ckpt_name}.ckpt"
-        elif self.ckpt_dir / f"{ckpt_name}".exists():
+        elif (self.ckpt_dir / f"{ckpt_name}").exists():
             return self.ckpt_dir / f"{ckpt_name}"
         else:
             return None
@@ -182,6 +183,7 @@ class Experiment:
             "_target_"
         ] = f"{pipeline_cfg['_target_']}.load_from_checkpoint"
         pipeline_cfg["checkpoint_path"] = ckpt_path
+        pipeline_cfg["strict"] = False
         # set LightningModule.cfg from hparams_file
         with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml") as f:
             f.write(OmegaConf.to_yaml(config, resolve=True))
@@ -222,12 +224,12 @@ def try_resume(cfg, replace_wandb_only=False):
         default False
     """
     path_cwd = Path(Path(".").resolve())
-    logger.info(f"Working directory: {path_cwd}")
+    if is_rank_zero():
+        logger.info(f"Working directory: {path_cwd}")
 
     exp = Experiment(path_cwd)
 
     if exp.last_ckpt_path.exists():
-
         # replace cfg with previous configuration
         if not replace_wandb_only:
             logger.warning(f"Replace the whole config with: {exp.config_path}.")
@@ -272,10 +274,5 @@ def prepare_trainer_config(cfg, logging=True):
         for _, cfg_callback in cfg.callbacks.items():
             callbacks.append(instantiate(cfg_callback))
         cfg_trainer["callbacks"] = callbacks
-
-    if cfg_trainer["strategy"] == "ddp":
-        from lightning.pytorch.strategies.ddp import DDPStrategy
-
-        cfg_trainer["strategy"] = DDPStrategy(find_unused_parameters=False)
 
     return cfg_trainer

@@ -4,6 +4,7 @@ from pathlib import Path
 import dotenv
 import hydra
 import lightning as lt
+import torch
 from hydra.utils import instantiate
 from omegaconf import DictConfig
 
@@ -21,6 +22,16 @@ lt._logger.handlers = []
 lt._logger.propagate = True
 
 dotenv.load_dotenv(override=True)
+
+
+# https://pytorch.org/docs/stable/notes/cuda.html#tensorfloat-32-tf32-on-ampere-devices
+if torch.__version__ >= "1.12":
+    # The flag below controls whether to allow TF32 on matmul. This flag defaults to False
+    # in PyTorch 1.12 and later.
+    torch.backends.cuda.matmul.allow_tf32 = True
+
+    # The flag below controls whether to allow TF32 on cuDNN. This flag defaults to True.
+    torch.backends.cudnn.allow_tf32 = True
 
 
 @hydra.main(version_base="1.3", config_path="conf", config_name="train")
@@ -47,7 +58,7 @@ def main(cfg: DictConfig) -> None:
 
     # Initialize trainer
     cfg_trainer = prepare_trainer_config(cfg)
-    trainer = lt.Trainer(**cfg_trainer)
+    trainer = instantiate(cfg_trainer)
 
     # Training
     if cfg.resume_ckpt is not None:

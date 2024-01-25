@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.4
-# dockerlab template: workspace_pytorch_1_13 (full)
+# dockerlab template: workspace_pytorch_2_1 (full)
 # https://github.com/hughplay/dockerlab
 
-FROM nvidia/cuda:11.7.1-cudnn8-devel-ubuntu20.04
+FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
 
 # Set default RUN shell to /bin/bash
 SHELL ["/bin/bash", "-cu"]
@@ -138,22 +138,22 @@ RUN cd /tmp \
     && fc-cache -fv
 
 # --------------------------------------------------------------------------------
-# FROM deepbase/dockerlab:workspace_cuda_11_7
+# FROM deepbase/dockerlab:workspace_cuda_11_8
 
 
-# Install Pytorch 1.13.1
+# Install Pytorch 2.1.2
 # you can find other versions and installation commands from:
 # https://pytorch.org/get-started/previous-versions/
 # https://github.com/pytorch/pytorch/wiki/PyTorch-Versions
 RUN pip install --no-cache-dir \
-    torch==1.13.1 \
-    torchvision==0.14.1 \
-    torchaudio==0.13.1 \
-    --extra-index-url https://download.pytorch.org/whl/cu117
+    torch==2.1.2 \
+    torchvision==0.16.2 \
+    torchaudio==2.1.2 \
+    --extra-index-url https://download.pytorch.org/whl/cu118
 
 
 # --------------------------------------------------------------------------------
-# FROM deepbase/dockerlab:workspace_pytorch_1_13
+# FROM deepbase/dockerlab:workspace_pytorch_2_1
 
 
 # ==================================================

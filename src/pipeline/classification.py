@@ -1,9 +1,10 @@
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from hydra.utils import instantiate
 from lightning import LightningModule
-from lightning.pytorch.utilities.memory import get_model_size_mb
+
+from src.utils.torchtool import get_model_size_mb
 
 logger = logging.getLogger(__name__)
 
@@ -130,7 +131,7 @@ class ClassificationLitModule(LightningModule):
             "targets": outputs["targets"],
         }
 
-    def training_epoch_end(self, outputs: List[Any]):
+    def on_train_epoch_end(self):
         # `outputs` is a list of dicts returned from `training_step()`
         self.criterion.epoch_end(stage="train")
 
@@ -160,7 +161,7 @@ class ClassificationLitModule(LightningModule):
             "targets": outputs["targets"],
         }
 
-    def validation_epoch_end(self, outputs: List[Any]):
+    def on_validation_epoch_end(self):
         self.log(
             "val/acc_best",
             self.criterion.val_acc_best,
@@ -193,5 +194,5 @@ class ClassificationLitModule(LightningModule):
             "targets": outputs["targets"],
         }
 
-    def test_epoch_end(self, outputs: List[Any]):
+    def on_test_epoch_end(self):
         self.criterion.epoch_end(stage="test")

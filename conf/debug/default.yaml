@@ -13,7 +13,6 @@ trainer:
   devices: 1
   accelerator: gpu
   detect_anomaly: true # raise exception if NaN or +/-inf is detected in any tensor
-  track_grad_norm: 2 # track gradient norm with loggers
 
 # sets level of all command line loggers to 'DEBUG'
 hydra:
