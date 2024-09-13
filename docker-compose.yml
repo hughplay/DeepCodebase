@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   project:
     container_name: ${PROJECT}_${USER_NAME}
@@ -17,7 +16,7 @@ services:
       - TZ=Asia/Shanghai
       - TORCH_HOME=/data/torch_model
       - HF_HOME=/data/pretrain/transformers
-      - CLIP_CACHE=/data/pretrain/clip
+      - HF_ENDPOINT=https://hf-mirror.com
       - DISPLAY=${DISPLAY}
 
     # change hostname to docker
@@ -54,4 +53,3 @@ services:
       - type: bind
         source: ${CONTAINER_HOME}
         target: ${TARGET_HOME}
-      - /tmp/.X11-unix:/tmp/.X11-unix

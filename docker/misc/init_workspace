@@ -41,6 +41,7 @@ echo
 echo "----------------------------------------------------"
 if [ -x "$(command -v zsh)" ]; then
     echo "Use zsh."
+    echo "DISABLE_AUTO_UPDATE=true" >> ~/.zshrc
     chsh -s `which zsh` $USER
 fi
 

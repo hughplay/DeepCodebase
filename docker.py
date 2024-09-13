@@ -17,6 +17,8 @@ import subprocess
 from collections import OrderedDict
 from pathlib import Path
 
+import sh
+
 DEFAULT_ENV_PATH = ".env"
 DEFAULT_PROJECT_NAME = "mnist"
 DEFAULT_CODE_ROOT = "."
@@ -101,12 +103,13 @@ def main():
 
     args = parser.parse_args()
 
-    _set_env(verbose=(args.action == "start" or args.action == "startd"))
+    env = _set_env(verbose=(args.action == "start" or args.action == "startd"))
+    COMPOSE_COMMAND = env["COMPOSE_COMMAND"]
 
     SHELL = "zsh" if args.service == "project" else "bash"
 
     if args.action == "start" or args.action == "startd":
-        command = "docker-compose up"
+        command = f"{COMPOSE_COMMAND} up"
         if args.action == "startd":
             command += " -d"
         if args.build:
@@ -114,11 +117,11 @@ def main():
         command += f" {args.service}"
     elif args.action == "enter":
         if args.root:
-            command = f"docker-compose exec -u root {args.service} {SHELL}"
+            command = f"{COMPOSE_COMMAND} exec -u root {args.service} {SHELL}"
         else:
-            command = f"docker-compose exec {args.service} {SHELL}"
+            command = f"{COMPOSE_COMMAND} exec {args.service} {SHELL}"
     else:
-        command = f"docker-compose {args.action}"
+        command = f"{COMPOSE_COMMAND} {args.action}"
     command = "DOCKER_BUILDKIT=1 " + command
     print(f"> {command}\n")
     execute(command)
@@ -201,6 +204,12 @@ def _set_env(env_path=DEFAULT_ENV_PATH, verbose=False):
             e["TARGET_HOME"] = "/root"
 
     e["COMPOSE_PROJECT_NAME"] = f"{e['PROJECT']}_{e['USER_NAME']}".lower()
+    try:
+        sh.docker("compose", "version")
+        e["COMPOSE_COMMAND"] = "docker compose"
+    except Exception:
+        e["COMPOSE_COMMAND"] = "docker-compose"
+
     e.save()
 
     if verbose:

@@ -1,10 +1,7 @@
 # =============================================
 # Lightning
 # =============================================
-torch>=2.1.2
-torchvision>=0.16.2
-torchaudio>=2.1.2
-lightning==2.1.3
+lightning==2.2.2
 torchmetrics
 
 
@@ -24,13 +21,14 @@ wandb
 # Common Used Tools
 # =============================================
 # einops
+numpy<2.0
 pandas
 Jinja2
 # openpyxl==3.0.10
 # matplotlib==3.5.2
 # scikit-learn==1.1.1
 # pingouin
-# scipy
+scipy
 
 # =============================================
 # Computer Vision
