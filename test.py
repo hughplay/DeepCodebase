@@ -122,7 +122,7 @@ def test(
 
         # initialize trainer
         cfg_trainer = prepare_trainer_config(config, logging=False)
-        trainer = lt.Trainer(**cfg_trainer)
+        trainer = instantiate(cfg_trainer)
 
         # testing
         results = trainer.test(pipeline, datamodule=datamodule)
