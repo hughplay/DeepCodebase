@@ -1,6 +1,11 @@
 import logging
+import os
 import random
+import re
+import signal
+import threading
 import time
+from pathlib import Path
 
 import psutil
 
@@ -90,3 +95,33 @@ def wait_until_memory_available(
         )
         time.sleep(REFRESH_SECONDS)
     raise Exception("No Memory available")
+
+
+def force_finish_wandb():
+    wandb_log_path = Path("wandb/latest-run/logs/debug-internal.log")
+    if not wandb_log_path.exists():
+        print("wandb log file not found.")
+        return
+    with open(wandb_log_path, "r") as f:
+        last_line = f.readlines()[-1]
+    match = re.search(r"(HandlerThread:|SenderThread:)\s*(\d+)", last_line)
+    if match:
+        pid = int(match.group(2))
+        print(f"wandb pid: {pid}")
+    else:
+        print("Cannot find wandb process-id.")
+        return
+
+    try:
+        os.kill(pid, signal.SIGKILL)
+        print(f"Process with PID {pid} killed successfully.")
+    except OSError:
+        print(f"Failed to kill process with PID {pid}.")
+
+
+# Start wandb.finish() and execute force_finish_wandb() after 60 seconds.
+def try_finish_wandb():
+    import wandb
+
+    threading.Timer(60, force_finish_wandb).start()
+    wandb.finish()

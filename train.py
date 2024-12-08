@@ -14,6 +14,7 @@ from src.utils.exptool import (
     register_omegaconf_resolver,
     try_resume,
 )
+from src.utils.systool import try_finish_wandb
 
 register_omegaconf_resolver()
 logger = logging.getLogger(__name__)
@@ -71,6 +72,10 @@ def main(cfg: DictConfig) -> None:
 
     # print logdir for conveniently copy
     logger.info(f"Logdir: {Path('.').resolve()}")
+
+    # Close wandb
+    if "wandb" in cfg.logging:
+        try_finish_wandb()
 
 
 if __name__ == "__main__":
