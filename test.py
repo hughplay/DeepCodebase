@@ -30,6 +30,17 @@ logger = logging.getLogger(__name__)
 
 main_dir = Path(__file__).resolve().parent
 
+
+# https://pytorch.org/docs/stable/notes/cuda.html#tensorfloat-32-tf32-on-ampere-devices
+if torch.__version__ >= "1.12":
+    # The flag below controls whether to allow TF32 on matmul. This flag defaults to False
+    # in PyTorch 1.12 and later.
+    torch.backends.cuda.matmul.allow_tf32 = True
+
+    # The flag below controls whether to allow TF32 on cuDNN. This flag defaults to True.
+    torch.backends.cudnn.allow_tf32 = True
+
+
 # ======================================================
 # testing override functions
 # ======================================================
